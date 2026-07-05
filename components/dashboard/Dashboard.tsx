@@ -11,7 +11,7 @@ import StreakCard from "./StreakCard";
 import AnalyticsCard from "./AnalyticsCard";
 import SummaryCard from "./SummaryCard";
 import RevisionTracker from "./RevisionTracker";
-
+import MainLayout from "../layout/MainLayout";
 import DailyPlanner from "../planner/DailyPlanner";
 import StudyCalendar from "../calendar/StudyCalendar";
 
@@ -26,21 +26,23 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem("study-os-tasks");
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch("/api/tasks");
 
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    } else {
-      setTasks(initialTasks);
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      setTasks(data);
+    } catch (error) {
+      console.error(error);
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    localStorage.setItem(
-      "study-os-tasks",
-      JSON.stringify(tasks)
-    );
-  }, [tasks]);
+  fetchTasks();
+}, []);
+
 
   const completedTasks = tasks.filter(
     (task) => task.completed
@@ -58,8 +60,9 @@ export default function Dashboard() {
     );
   });
 
-  return (    <main className="max-w-7xl mx-auto p-6 space-y-8">
-
+ return (
+  <MainLayout>
+    <div className="max-w-7xl mx-auto space-y-8">
       <Header />
 
       <Progress tasks={tasks} />
@@ -103,7 +106,7 @@ export default function Dashboard() {
 
       <StudyCalendar />
 
-      <AnalyticsCard />
+      <AnalyticsCard tasks={tasks} />
 
       <SummaryCard
         total={tasks.length}
@@ -111,14 +114,15 @@ export default function Dashboard() {
       />
 
       <RevisionTracker />
+
       <PomodoroTimer />
 
       <div className="grid md:grid-cols-3 gap-6">
         <TestCard />
         <TomorrowPlan />
-        <StreakCard />
+        <StreakCard tasks={tasks} />
       </div>
-
-    </main>
-  );
+    </div>
+  </MainLayout>
+);
 }

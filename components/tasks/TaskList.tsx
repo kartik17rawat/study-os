@@ -9,30 +9,84 @@ type Props = {
 };
 
 export default function TaskList({ tasks, setTasks }: Props) {
-  const toggleTask = (id: string) => {
+  const toggleTask = async (id: string) => {
+    const task = tasks.find(
+      (t: any) => (t as any)._id === id || t.id === id
+    );
+
+    if (!task) return;
+
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        completed: !task.completed,
+      }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to update task");
+      return;
+    }
+
+    const updatedTask = await res.json();
+
     setTasks(
-      tasks.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
+      tasks.map((t: any) =>
+        ((t as any)._id === id || t.id === id)
+          ? updatedTask
+          : t
       )
     );
   };
 
-  const deleteTask = (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+  const deleteTask = async (id: string) => {
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      alert("Failed to delete task");
+      return;
+    }
+
+    setTasks(
+      tasks.filter(
+        (task: any) =>
+          (task as any)._id !== id && task.id !== id
+      )
+    );
   };
 
-  const editTask = (id: string) => {
+  const editTask = async (id: string) => {
     const newQuestion = prompt("Enter new Question Numbers");
 
     if (!newQuestion) return;
 
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        questionNumbers: newQuestion,
+      }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to update task");
+      return;
+    }
+
+    const updatedTask = await res.json();
+
     setTasks(
-      tasks.map((task) =>
-        task.id === id
-          ? { ...task, questionNumbers: newQuestion }
-          : task
+      tasks.map((t: any) =>
+        ((t as any)._id === id || t.id === id)
+          ? updatedTask
+          : t
       )
     );
   };
@@ -43,17 +97,29 @@ export default function TaskList({ tasks, setTasks }: Props) {
         📋 Today's Tasks
       </h2>
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onToggle={() => toggleTask(task.id)}
-            onDelete={() => deleteTask(task.id)}
-            onEdit={() => editTask(task.id)}
-          />
-        ))}
-      </div>
+      {tasks.length === 0 ? (
+        <p className="text-gray-400">
+          No tasks available.
+        </p>
+      ) : (
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {tasks.map((task: any) => (
+            <TaskItem
+              key={(task as any)._id || task.id}
+              task={task}
+              onToggle={() =>
+                toggleTask((task as any)._id || task.id)
+              }
+              onDelete={() =>
+                deleteTask((task as any)._id || task.id)
+              }
+              onEdit={() =>
+                editTask((task as any)._id || task.id)
+              }
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
