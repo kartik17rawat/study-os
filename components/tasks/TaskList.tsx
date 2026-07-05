@@ -24,14 +24,14 @@ export default function TaskList({ tasks, setTasks }: Props) {
   };
 
   const editTask = (id: string) => {
-    const newName = prompt("Enter new task name");
+    const newQuestion = prompt("Enter new Question Numbers");
 
-    if (!newName) return;
+    if (!newQuestion) return;
 
     setTasks(
       tasks.map((task) =>
         task.id === id
-          ? { ...task, task: newName }
+          ? { ...task, questionNumbers: newQuestion }
           : task
       )
     );
@@ -39,15 +39,9 @@ export default function TaskList({ tasks, setTasks }: Props) {
 
   return (
     <section className="mt-8">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl font-bold text-white">
-          📋 Today's Tasks
-        </h2>
-
-        <span className="text-slate-400">
-          {tasks.length} Tasks
-        </span>
-      </div>
+      <h2 className="text-2xl font-bold text-white mb-5">
+        📋 Today's Tasks
+      </h2>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {tasks.map((task) => (

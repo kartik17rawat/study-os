@@ -1,20 +1,29 @@
 "use client";
-
+import PomodoroTimer from "../timer/PomodoroTimer";
 import { useEffect, useState } from "react";
-
+import TimerModes from "../timer/TimerModes";
 import Header from "./Header";
 import Progress from "./Progress";
 import SubjectCard from "./SubjectCard";
 import TestCard from "./TestCard";
 import TomorrowPlan from "./TomorrowPlan";
+import StreakCard from "./StreakCard";
+import AnalyticsCard from "./AnalyticsCard";
+import SummaryCard from "./SummaryCard";
+import RevisionTracker from "./RevisionTracker";
+
+import DailyPlanner from "../planner/DailyPlanner";
+import StudyCalendar from "../calendar/StudyCalendar";
 
 import TaskList from "../tasks/TaskList";
 import AddTask from "../tasks/AddTask";
+import SearchBar from "./SearchBar";
 
 import { Task, initialTasks } from "../../data/tasks";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const savedTasks = localStorage.getItem("study-os-tasks");
@@ -27,16 +36,30 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (tasks.length > 0) {
-      localStorage.setItem(
-        "study-os-tasks",
-        JSON.stringify(tasks)
-      );
-    }
+    localStorage.setItem(
+      "study-os-tasks",
+      JSON.stringify(tasks)
+    );
   }, [tasks]);
 
-  return (
-    <main className="max-w-7xl mx-auto p-6 space-y-8">
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
+
+  const filteredTasks = tasks.filter((task) => {
+    const query = search.toLowerCase();
+
+    return (
+      task.subject.toLowerCase().includes(query) ||
+      task.chapter.toLowerCase().includes(query) ||
+      task.material.toLowerCase().includes(query) ||
+      task.taskType.toLowerCase().includes(query) ||
+      task.questionNumbers.toLowerCase().includes(query)
+    );
+  });
+
+  return (    <main className="max-w-7xl mx-auto p-6 space-y-8">
+
       <Header />
 
       <Progress tasks={tasks} />
@@ -61,8 +84,13 @@ export default function Dashboard() {
         />
       </div>
 
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+      />
+
       <TaskList
-        tasks={tasks}
+        tasks={filteredTasks}
         setTasks={setTasks}
       />
 
@@ -71,10 +99,26 @@ export default function Dashboard() {
         setTasks={setTasks}
       />
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <DailyPlanner />
+
+      <StudyCalendar />
+
+      <AnalyticsCard />
+
+      <SummaryCard
+        total={tasks.length}
+        completed={completedTasks}
+      />
+
+      <RevisionTracker />
+      <PomodoroTimer />
+
+      <div className="grid md:grid-cols-3 gap-6">
         <TestCard />
         <TomorrowPlan />
+        <StreakCard />
       </div>
+
     </main>
   );
 }
