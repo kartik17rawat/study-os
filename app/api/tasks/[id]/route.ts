@@ -71,10 +71,7 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const task = await Task.findOneAndDelete({
-      _id: id,
-      userId: user.userId,
-    });
+    const task = await Task.findOneAndDelete(id);
 
     if (!task) {
       return NextResponse.json(
