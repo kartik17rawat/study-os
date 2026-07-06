@@ -16,7 +16,7 @@ export async function connectDB() {
   try {
     console.log("==================================");
     console.log("Connecting to MongoDB...");
-    console.log("URI exists:", !!process.env.MONGODB_URI);
+    console.log("URI exists:", !!process.env.MONGODB_URI)?.substring(0, 25);
     console.log(
       "URI:",
       process.env.MONGODB_URI?.replace(/\/\/(.*):(.*)@/, "//****:****@")
