@@ -11,8 +11,10 @@ export default function MainLayout({ children }: Props) {
     <div className="min-h-screen bg-slate-950">
       <Sidebar />
 
-      <main className="pt-20 md:pt-4 md:ml-64 p-4">
-        {children}
+      <main className="pt-16 md:pt-0 md:ml-64 min-w-0 overflow-x-hidden">
+        <div className="w-full max-w-7xl mx-auto px-4 py-6">
+          {children}
+        </div>
       </main>
     </div>
   );

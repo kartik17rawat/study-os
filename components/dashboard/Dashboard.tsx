@@ -62,12 +62,12 @@ export default function Dashboard() {
 
  return (
   <MainLayout>
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="space-y-8">
       <Header />
 
       <Progress tasks={tasks} />
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1md:grid-cols-3 gap-6">
         <SubjectCard
           subject="Chemistry"
           chapter="Atomic Structure"
@@ -116,7 +116,7 @@ export default function Dashboard() {
 
       <PomodoroTimer />
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1md:grid-cols-3 gap-6">
         <TestCard />
         <TomorrowPlan />
         <StreakCard tasks={tasks} />
