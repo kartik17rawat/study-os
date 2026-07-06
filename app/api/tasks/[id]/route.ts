@@ -22,16 +22,13 @@ export async function PATCH(
     const { id } = await params;
     const body = await req.json();
 
-    const task = await Task.findOneAndUpdate(
-      {
-        _id: id,
-        userId: user.userId,
-      },
-      body,
-      {
-        new: true,
-      }
-    );
+const task = await Task.findByIdAndUpdate(
+  id,
+  body,
+  {
+    new: true,
+  }
+);
 
     if (!task) {
       return NextResponse.json(
@@ -71,7 +68,7 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const task = await Task.findOneAndDelete(id);
+    const task = await Task.findByIdAndDelete(id);
 
     if (!task) {
       return NextResponse.json(

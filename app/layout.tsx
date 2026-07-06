@@ -34,4 +34,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">{children} <Toaster richColors position="top-right"/></body>
     </html>
   );
+  <body className="bg-slate-950 text-white">
+  {children}
+</body>
 }

@@ -20,7 +20,7 @@ import AddTask from "../tasks/AddTask";
 import SearchBar from "./SearchBar";
 
 import { Task, initialTasks } from "../../data/tasks";
-
+{/*AnalyticsCard tasks={tasks} />*/}
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [search, setSearch] = useState("");
@@ -113,7 +113,6 @@ export default function Dashboard() {
         completed={completedTasks}
       />
 
-      <RevisionTracker />
 
       <PomodoroTimer />
 

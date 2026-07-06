@@ -63,7 +63,11 @@ const TaskSchema = new Schema(
       type: String,
       default: "",
     },
-  },
+    date: {
+      type: String,
+      default: () => new Date().toLocaleDateString("en-GB"),
+    },
+  }, 
   {
     timestamps: true,
   }

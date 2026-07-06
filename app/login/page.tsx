@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -21,6 +21,7 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           email,
           password,
@@ -30,19 +31,22 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-       toast.error(data.message);
+        alert(data.message || "Login failed");
         setLoading(false);
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
 
-      toast.success("Welcome back!");
+      alert("Login Successful");
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
+      router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      alert("Something went wrong");
     }
 
     setLoading(false);
@@ -54,32 +58,32 @@ export default function LoginPage() {
         onSubmit={handleLogin}
         className="w-full max-w-md bg-slate-900 rounded-2xl p-8 border border-slate-800"
       >
-        <h1 className="text-3xl font-bold text-white text-center mb-8">
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
           Login
         </h1>
 
         <input
           type="email"
           placeholder="Email"
-          className="w-full mb-4 p-3 rounded-lg bg-slate-800 text-white"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full mb-5 p-4 rounded-xl bg-slate-800 border border-slate-700 text-white outline-none"
           required
         />
 
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-6 p-3 rounded-lg bg-slate-800 text-white"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="w-full mb-6 p-4 rounded-xl bg-slate-800 border border-slate-700 text-white outline-none"
           required
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold"
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold transition"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
@@ -91,7 +95,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => router.push("/signup")}
-          className="w-full mt-3 border border-slate-700 text-white py-3 rounded-lg hover:bg-slate-800"
+          className="w-full mt-3 border border-slate-700 hover:bg-slate-800 text-white py-4 rounded-xl"
         >
           Create Account
         </button>

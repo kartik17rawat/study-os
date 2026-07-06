@@ -14,6 +14,7 @@ export default function Sidebar() {
     { icon: "📊", title: "Analytics", href: "/analytics" },
     { icon: "🧪", title: "Tests", href: "/tests" },
     { icon: "⚙️", title: "Settings", href: "/settings" },
+    { icon: "🔁",title: "Revision Tracker",href: "/revision",}
   ];
 
   return (

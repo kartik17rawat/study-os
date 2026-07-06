@@ -25,18 +25,19 @@ export default function AddTask({ tasks, setTasks }: Props) {
       return;
     }
 
-    const newTask: Task = {
-      id: Date.now().toString(),
-      subject,
-      material,
-      chapter,
-      taskType,
-      questionNumbers,
-      priority,
-      estimatedTime,
-      reason,
-      completed: false,
-    };
+ const newTask: Task = {
+  id: Date.now().toString(),
+  subject,
+  material,
+  chapter,
+  taskType,
+  questionNumbers,
+  priority,
+  estimatedTime,
+  reason,
+  completed: false,
+  date: new Date().toISOString(),
+};
 
     const res = await fetch("/api/tasks", {
       method: "POST",
